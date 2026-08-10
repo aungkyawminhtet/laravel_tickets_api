@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ApiLoginRequest;
 use App\Models\User;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -23,8 +24,22 @@ class AuthController extends Controller
         return $this->ok(
             'Authenicated',
             [
-                'token' => $user->createToken('authToken')->plainTextToken,
+                'token' => $user->createToken('authToken', ['*'], now()->addMinutes(30))->plainTextToken,
             ]
         );
+    }
+
+
+    public function register(ApiLoginRequest $request){
+
+        return $this->ok("Register Success");
+    }
+
+
+    public function logout(Request $request){
+
+        $request->user()->currentAccessToken()->delete();
+
+        return $this->ok("Logout Success");
     }
 }
