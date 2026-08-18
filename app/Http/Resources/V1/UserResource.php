@@ -18,6 +18,7 @@ class UserResource extends JsonResource
             'type' => 'user',
             'id' => $this->id,
             'attributes' => [
+
                 'name' => $this->name,
                 'email' => $this->email,
 
@@ -36,6 +37,9 @@ class UserResource extends JsonResource
                 //     $this->email_verified_at
                 // ),
             ],
+
+            'includes' => TicketResource::collection($this->whenLoaded('tickets')),
+            'links' => route('users.show',['user' => $this->id])
         ];
     }
 }
