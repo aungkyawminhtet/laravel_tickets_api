@@ -2,16 +2,8 @@
 
 namespace App\Http\Filters\V1;
 
-class TicketFilter extends ScopeFilter
+class AuthorFilter extends ScopeFilter
 {
-
-    protected $sortAble = [
-        'status',
-        'title',
-        'createdAt' => 'created_at',
-        'updatedAt' => 'updated_at',
-
-    ];
 
     public function createdAt($value) {
         $dates = explode(',', $value);
@@ -28,15 +20,15 @@ class TicketFilter extends ScopeFilter
         return $this->builder->with($value);
     }
 
-    public function status($value)
+    public function id($value)
     {
-        return $this->builder->whereIn('status', explode(',', $value));
+        return $this->builder->whereIn('id', explode(',', $value));
     }
 
-    public function title($value)
+    public function email($value)
     {
         $like_str = str_replace("*", "%", $value);
-        return $this->builder->where('title', 'like', $like_str);
+        return $this->builder->where('email', 'like', $like_str);
     }
 
     public function updatedAt($value)

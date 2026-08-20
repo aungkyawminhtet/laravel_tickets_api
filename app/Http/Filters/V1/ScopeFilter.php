@@ -11,15 +11,18 @@ abstract class ScopeFilter
 
     protected $request;
 
+    protected $sortAble = [];
+
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
 
-    protected function filter($arr) {
+    protected function filter($arr)
+    {
 
-        foreach ($arr as $key => $value){
+        foreach ($arr as $key => $value) {
 
             if (method_exists($this, $key)) {
                 $this->$key($value);
@@ -40,5 +43,34 @@ abstract class ScopeFilter
         }
 
         return $builder;
+    }
+
+    public function sort($value)
+    {
+
+        $sortAttributes = explode(',', $value);
+
+        foreach ($sortAttributes as $sortAttribute) {
+
+            $direction = 'asc';
+
+            if (strpos($sortAttribute, '-') === 0) {
+                $direction = 'desc';
+
+                $sortAttribute = substr($sortAttribute, 1);
+            }
+
+            if (!in_array($sortAttribute, $this->sortAble) && ! array_key_exists($sortAttribute, $this->sortAble)) {
+                continue;
+            }
+
+            $columnName = $this->sortAble[$sortAttribute] ?? null;
+
+            if ($columnName === null ){
+                $columnName = $sortAttribute;
+            }
+
+            $this->builder->orderBy($columnName, $direction);
+        }
     }
 }
