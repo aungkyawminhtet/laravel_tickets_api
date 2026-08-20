@@ -24,7 +24,7 @@ class AuthController extends Controller
         return $this->ok(
             'Authenicated',
             [
-                'token' => $user->createToken('authToken', ['*'], now()->addMinutes(30))->plainTextToken,
+                'token' => $user->createToken('authToken', ['*'], now()->addHours(24))->plainTextToken,
             ]
         );
     }

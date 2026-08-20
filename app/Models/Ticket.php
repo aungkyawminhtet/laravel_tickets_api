@@ -2,16 +2,25 @@
 
 namespace App\Models;
 
+use App\Http\Filters\V1\ScopeFilter;
+use Database\Factories\TicketFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
-    /** @use HasFactory<\Database\Factories\TicketFactory> */
+    /** @use HasFactory<TicketFactory> */
     use HasFactory;
 
-    public function user(): BelongsTo{
-        return $this->belongsTo(User::class);
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "user_id");
+    }
+
+    public function scopeFilter(Builder $builder, ScopeFilter $filters)
+    {
+        return $filters->apply($builder);
     }
 }
